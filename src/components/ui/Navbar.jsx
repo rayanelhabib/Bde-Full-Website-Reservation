@@ -25,7 +25,6 @@ const Navbar = () => {
     >
       <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 
-        {/* LOGO */}
         <Link
           to="/"
           className={`
@@ -37,7 +36,6 @@ const Navbar = () => {
           Brand
         </Link>
 
-        {/* LINKS */}
         <div className="hidden md:flex items-center gap-8">
           <Link
             to="/"
@@ -63,7 +61,6 @@ const Navbar = () => {
             Reservation
           </Link>
 
-          {/* CTA */}
           <Link
             to="/reservation"
             className={`

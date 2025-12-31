@@ -7,10 +7,8 @@ import './App.css'
 function App() {
   return (
     <Router>
-      {/* NAVBAR TOUJOURS VISIBLE */}
       <Navbar />
 
-      {/* ROUTES */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/reservation" element={<Reservation />} />

@@ -15,10 +15,8 @@ const Home = () => {
 
         <section className="relative w-full h-[60vh] md:h-[80vh] bg-white">
           <DomeGallery
-          /*overlayBlurColor="rgba(255,255,255,0.9)"
-          grayscale={false}*/
-          segments={24}          // ⬇️ moins d’éléments (plus fluide mobile)
-          dragSensitivity={35}   // ⬇️ drag plus lent
+          segments={24}
+          dragSensitivity={35}
           maxVerticalRotationDeg={3}
           grayscale={false}
           overlayBlurColor="rgba(255,255,255,0.9)"

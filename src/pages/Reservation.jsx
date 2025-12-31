@@ -1,20 +1,16 @@
 import { useReservation } from '../hooks/useReservation'
 import { useNavigate } from 'react-router-dom'
 
-// Composants UI
 import Alert from '../components/ui/Alert'
 import Button from '../components/ui/Button'
 
-// Composants Layout
 import BackButton from '../components/layout/BackButton'
 import PageHeader from '../components/layout/PageHeader'
 
-// Composants Form
 import PersonalInfoSection from '../components/form/PersonalInfoSection'
 import ContactInfoSection from '../components/form/ContactInfoSection'
 import IdentitySection from '../components/form/IdentitySection'
 
-// Composants Reservation
 import ConfirmationSummary from '../components/reservation/ConfirmationSummary'
 import SuccessMessage from '../components/reservation/SuccessMessage'
 
@@ -37,7 +33,6 @@ function Reservation() {
       <div className="max-w-3xl w-full">
         <BackButton />
 
-        {/* Carte principale */}
         <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
           <PageHeader
             icon={

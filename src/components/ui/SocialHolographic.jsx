@@ -3,7 +3,6 @@ import "./social-holographic.css";
 const SocialHolographic = () => {
   return (
     <div className="holographic-stack">
-      {/* GITHUB */}
       <a
         href="https://github.com/"
         target="_blank"
@@ -21,7 +20,6 @@ const SocialHolographic = () => {
         <div className="holographic-pulse"></div>
       </a>
 
-      {/* INSTAGRAM */}
       <a
         href="https://instagram.com/"
         target="_blank"
