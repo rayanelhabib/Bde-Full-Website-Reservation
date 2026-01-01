@@ -1,0 +1,41 @@
+/* ChromaGrid Background - Extend the gray background */
+main {
+  background-color: white;  /* Définit le fond de la page principale sur blanc */
+  color: #333;              /* Définissez la couleur du texte pour un meilleur contraste */
+} 
+body {
+  background-color: #ffffff; /* Gris clair pour le fond global */
+}
+
+.main-container {
+  background-color: #ffffff; /* Gris clair pour le fond de ChromaGrid */
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* SECTION CHROMA GRID */
+.chroma-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
+  justify-content: center;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  --x: 50%;
+  --y: 50%;
+  --r: 220px;
+}
+
+/* Adjustment for cards */
+.chroma-card {
+  width: 100%;
+  max-width: 300px; /* Ajuster pour rendre la carte plus petite si nécessaire */
+}
+
+

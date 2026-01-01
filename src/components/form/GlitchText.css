@@ -1,0 +1,144 @@
+/* =========================
+   Animation de texte "Animated Text Fill"
+========================= */
+
+@keyframes aitf {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animated-text {
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  display: inline-block;
+  border: 4px double rgba(255, 255, 255, 0.25);
+  border-width: 4px 0;
+  padding: 1.5em 0;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: auto;
+  margin: 0;
+  text-align: center;
+}
+
+.animated-text span {
+  font: 700 4em/1 "Oswald", sans-serif;
+  letter-spacing: 0;
+  padding: 0.25em 0 0.325em;
+  display: inline-block;
+  margin: 0 auto;
+  text-shadow: 0 0 80px rgba(255, 255, 255, 0.5);
+
+  /* Clip Background Image */
+  background: url(https://i.ibb.co/RDTnNrT/animated-text-fill.png) repeat-y;
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  /* Animate Background Image */
+  -webkit-text-fill-color: transparent;
+  -webkit-animation: aitf 80s linear infinite;
+
+  /* Activate hardware acceleration for smoother animations */
+  -webkit-transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+}
+
+/* Ajustements pour les petits écrans */
+@media (max-width: 768px) {
+  .animated-text span {
+    font-size: 2rem; /* Réduit la taille du texte pour les petits écrans */
+    letter-spacing: 0.2em; /* Ajuste l'espacement des lettres */
+    padding: 0.5em 0; /* Ajuste l'espacement vertical */
+    max-width: 100%; /* Limite la largeur du texte */
+    margin: 0 auto; /* Centre le texte */
+  }
+}
+
+/* Ajustement pour décaler légèrement à gauche sur mobile */
+@media (max-width: 480px) {
+  .animated-text span {
+    margin-left: -5%; /* Décalage léger à gauche pour afficher les lettres manquantes */
+  }
+}
+
+.button {
+  --font-color: #323232;
+  --bg-color: #fff;
+  --main-color: #323232;
+  width: 120px;
+  height: 45px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--font-color);
+  cursor: pointer;
+}
+
+.button:active {
+  box-shadow: 0px 0px var(--main-color);
+  transform: translate(3px, 3px);
+}
+
+/* Conteneur de la carte - Centrage et ajustement de la largeur */
+.card-container {
+  max-width: 100%;
+  width: 90%; /* Réduit la largeur pour éviter les débordements */
+  margin: 0 auto; /* Centrer la carte */
+}
+
+/* Formulaire et contenu */
+form {
+  width: 100%;
+  max-width: 500px; /* Limite la largeur sur les petits écrans */
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Ajustements pour les petits écrans (téléphones) */
+@media (max-width: 480px) {
+  .card-container {
+    width: 100%; /* Utiliser 100% de la largeur de l'écran pour les petits appareils */
+    margin: 0 10px; /* Ajouter un petit padding de chaque côté */
+  }
+
+  /* Formulaire sur petits écrans */
+  form {
+    width: 100%; /* S'assure que le formulaire ne dépasse pas l'écran */
+    padding: 15px;
+  }
+
+  /* Texte "Réservation" et description */
+  .animated-text {
+    font-size: 4.5vw; /* Ajuste la taille du texte "Réservation" en fonction de la largeur de l'écran */
+    letter-spacing: 0.3em; /* Réduit l'espacement pour les petits écrans */
+    padding: 1em;
+  }
+
+  /* Ajustement des champs du formulaire */
+  .inputGroup input,
+  .inputGroup label {
+    font-size: 14px; /* Réduit la taille des champs de texte sur mobile */
+  }
+
+  /* Bouton ajusté pour les petits écrans */
+  .button {
+    width: 100%; /* Fait en sorte que le bouton prenne toute la largeur disponible */
+    padding: 12px;
+    font-size: 16px; /* Ajuste la taille du texte du bouton */
+  }
+
+  /* Ajustement pour l'image sur mobile : */
+  .w-32 {
+    width: 40%; /* Augmente la taille de l'image pour mobile (ajustée) */
+    height: 40%;
+  }
+}

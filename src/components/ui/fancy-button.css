@@ -2,7 +2,7 @@
     --primary: #ff5569;
     --neutral-1: #f7f8f7;
     --neutral-2: #e7e7e7;
-    --radius: 14px;
+    --radius: 25px;
   
     cursor: pointer;
     border-radius: var(--radius);

@@ -16,7 +16,7 @@ function FormField({
   error
 }) {
   const iconElement = icon ? (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-500 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       {icon}
     </svg>
   ) : null
@@ -38,6 +38,8 @@ function FormField({
 }
 
 export default FormField
+
+
 
 
 

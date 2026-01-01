@@ -14,7 +14,7 @@ const CTASection = () => {
       <div className="mt-8">
         <Link
           to="/reservation"
-          className="inline-block bg-white text-blue-600 px-8 py-3 rounded-md font-semibold hover:bg-gray-100 transition"
+          className="inline-block bg-white dark:bg-gray-800 text-blue-600 dark:text-blue-400 px-8 py-3 rounded-md font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
         >
           Réserver maintenant
         </Link>
