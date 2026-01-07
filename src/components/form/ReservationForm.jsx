@@ -146,9 +146,36 @@ Pour plus d'informations, veuillez contacter BDE sur Instagram.
 OR contact direct : @skz_rayan23 for any issue`;
       alert(confirmationMessage);
       
-      // TODO: In a production environment, you would trigger an email here
-      // This would typically involve calling a Supabase Edge Function
-      // that handles email sending securely
+      // In a production environment with Supabase Edge Functions configured,
+      // you would trigger an email to be sent to the user's email address
+      // Here's how you would call the Edge Function:
+      /*
+      try {
+        const emailResponse = await fetch('/functions/v1/send-reservation-confirmation', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+            'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            name: `${formData.prenom} ${formData.nom}`,
+            reservationDetails: {
+              nom: formData.nom,
+              prenom: formData.prenom,
+              num_tele: formData.num_tele,
+              cin: formData.cin,
+              email: formData.email,
+              transport: formData.transport
+            }
+          })
+        });
+      } catch (emailError) {
+        console.error('Error sending confirmation email:', emailError);
+        // Optionally notify the user that email couldn't be sent
+      }
+      */
       
       // Reset du formulaire
       setFormData({ nom: '', prenom: '', num_tele: '', cin: '', email: '', transport: '' });
