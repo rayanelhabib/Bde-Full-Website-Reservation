@@ -39,8 +39,17 @@ export default function ReservationForm() {
       initial={{ opacity: 0, y: 60 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="w-full max-w-4xl mx-auto p-10 min-h-[80vh] bg-white rounded-3xl shadow-[0_40px_120px_rgba(0,0,0,0.12)] card-container"
+      className="w-full max-w-4xl mx-auto p-10 min-h-[80vh] rounded-3xl shadow-[0_40px_120px_rgba(0,0,0,0.12)] card-container relative overflow-hidden"
+      style={{
+        backgroundImage: 'url(/party_back.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
     >
+      {/* Overlay pour améliorer la lisibilité */}
+      <div className="absolute inset-0 bg-white/60"></div>
+      <div className="relative z-10">
       {/* HEADER */}
       <div className="flex items-center gap-6 mb-16 justify-center">
         {/* Image */}
@@ -92,6 +101,7 @@ export default function ReservationForm() {
           </button>
         </div>
       </form>
+      </div>
     </Motion.div>
   );
 }

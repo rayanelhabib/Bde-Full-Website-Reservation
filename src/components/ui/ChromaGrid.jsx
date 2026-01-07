@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 
 const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, fadeOut = 0.6, ease = 'power3.out' }) => {
   const rootRef = useRef(null);
+  const fadeRef = useRef(null);
   const setX = useRef(null);
   const setY = useRef(null);
   const pos = useRef({ x: 0, y: 0 });
@@ -94,10 +95,15 @@ const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, fadeO
   const handleMove = e => {
     const r = rootRef.current.getBoundingClientRect();
     moveTo(e.clientX - r.left, e.clientY - r.top);
+    gsap.to(fadeRef.current, { opacity: 0, duration: 0.25, overwrite: true });
   };
 
   const handleLeave = () => {
-    // Pas besoin de fade out car les overlays sont supprimés
+    gsap.to(fadeRef.current, {
+      opacity: 1,
+      duration: fadeOut,
+      overwrite: true
+    });
   };
 
   const handleCardClick = url => {
@@ -114,6 +120,8 @@ const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, fadeO
   return (
     <div
       ref={rootRef}
+      onPointerMove={handleMove}
+      onPointerLeave={handleLeave}
       className={`relative w-full h-full flex flex-wrap justify-center items-center gap-3 ${className}`}
       style={{
         '--r': `${radius}px`,
@@ -126,62 +134,28 @@ const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, fadeO
           key={i}
           onMouseMove={handleCardMove}
           onClick={() => handleCardClick(c.url)}
-          className="group relative flex flex-col w-[300px] rounded-2xl overflow-hidden border border-slate-200/50 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer bg-white hover:scale-[1.02]"
+          className="group relative flex flex-col w-[300px] rounded-[20px] overflow-hidden border-2 border-transparent transition-colors duration-300 cursor-pointer"
           style={{
             '--card-border': c.borderColor || 'transparent',
-            '--spotlight-color': 'rgba(139, 92, 246, 0.15)'
+            background: c.gradient,
+            '--spotlight-color': 'rgba(255, 255, 255, 0.3)'
           }}
         >
-          {/* Gradient border effect on hover */}
-          <div 
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"
-            style={{
-              background: `linear-gradient(135deg, ${c.borderColor || '#6366f1'}20, ${c.borderColor || '#8b5cf6'}10)`,
-            }}
-          />
-          
-          {/* Spotlight effect */}
           <div
-            className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-20 opacity-0 group-hover:opacity-100 rounded-2xl"
+            className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-20 opacity-0 group-hover:opacity-100"
             style={{
               background:
                 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%)'
             }}
           />
-          
-          {/* Image container with gradient overlay */}
-          <div className="relative z-10 flex-1 p-3 box-border">
-            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-100 to-slate-200">
-              <img 
-                src={c.image} 
-                alt={c.title} 
-                loading="lazy" 
-                className="w-full h-[280px] object-cover transition-transform duration-500 group-hover:scale-110" 
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            </div>
+          <div className="relative z-10 flex-1 p-[10px] box-border">
+            <img src={c.image} alt={c.title} loading="lazy" className="w-full h-full object-cover rounded-[10px]" />
           </div>
-          
-          {/* Footer with improved styling */}
-          <footer className="relative z-10 p-4 bg-gradient-to-br from-slate-50 to-white border-t border-slate-100">
-            <div className="flex items-start justify-between gap-3 mb-2">
-              <h3 className="m-0 text-lg font-bold text-slate-800 group-hover:text-purple-600 transition-colors duration-300">
-                {c.title}
-              </h3>
-              {c.handle && (
-                <span className="text-sm text-slate-500 font-medium whitespace-nowrap">
-                  {c.handle}
-                </span>
-              )}
-            </div>
-            <p className="m-0 text-sm text-slate-600 font-medium">
-              {c.subtitle}
-            </p>
-            {c.location && (
-              <span className="text-xs text-slate-400 mt-1 block">
-                {c.location}
-              </span>
-            )}
+          <footer className="relative z-10 p-3 text-white font-sans grid grid-cols-[1fr_auto] gap-x-3 gap-y-1">
+            <h3 className="m-0 text-[1.05rem] font-semibold">{c.title}</h3>
+            {c.handle && <span className="text-[0.95rem] opacity-80 text-right">{c.handle}</span>}
+            <p className="m-0 text-[0.85rem] opacity-85">{c.subtitle}</p>
+            {c.location && <span className="text-[0.85rem] opacity-85 text-right">{c.location}</span>}
           </footer>
         </article>
       ))}
