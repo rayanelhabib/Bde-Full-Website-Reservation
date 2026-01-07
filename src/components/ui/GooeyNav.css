@@ -25,21 +25,24 @@
     1.001 85%,
     1
   );
-  --color-1: #8b5cf6;
-  --color-2: #a78bfa;
-  --color-3: #c084fc;
-  --color-4: #d8b4fe;
+  /* Couleurs professionnelles subtiles */
+  --color-1: rgba(99, 102, 241, 0.6);
+  --color-2: rgba(139, 92, 246, 0.6);
+  --color-3: rgba(168, 85, 247, 0.6);
+  --color-4: rgba(147, 51, 234, 0.6);
 }
 
 .gooey-nav-container {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   position: relative;
   display: flex;
   justify-content: center;
   margin-left: 510px;
-  
   margin-top: 10px;
   width: 100%;
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .gooey-nav-container nav {
@@ -58,8 +61,9 @@
   margin: 0 auto;
   position: relative;
   z-index: 3;
-  color: rgb(255, 255, 255);
-  text-shadow: 0 1px 1px hsl(205deg 30% 10% / 0.2);
+  color: rgb(17, 24, 39);
+  text-shadow: none;
+  font-weight: 500;
 }
 
 .gooey-nav-container nav ul li {
@@ -69,15 +73,23 @@
   transition:
     background-color 0.3s ease,
     color 0.3s ease,
-    box-shadow 0.3s ease;
+    box-shadow 0.3s ease,
+    transform 0.2s ease;
   box-shadow: 0 0 0.5px 1.5px transparent;
-  color: rgb(255, 255, 255);
+  color: rgb(17, 24, 39);
+  font-weight: 500;
+}
+
+.gooey-nav-container nav ul li:hover {
+  transform: translateY(-2px);
 }
 
 .gooey-nav-container nav ul li a {
   display: inline-block;
-  padding: 0.6em 1em;
-  font-size: 1.2rem;
+  padding: 0.7em 1.4em;
+  font-size: 1.1rem;
+  letter-spacing: 0.01em;
+  transition: all 0.3s ease;
 }
 
 .gooey-nav-container nav ul li:focus-within:has(:focus-visible) {
@@ -98,14 +110,91 @@
 }
 
 .gooey-nav-container nav ul li.active {
-  color: rgb(0, 26, 255);
+  color: rgb(99, 102, 241);
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Styles pour navbar transparente (page Reservation) - texte blanc */
+.gooey-nav-container.transparent-nav nav ul {
+  color: rgb(255, 255, 255);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-weight: 500;
+}
+
+.gooey-nav-container.transparent-nav nav ul li {
+  color: rgb(255, 255, 255);
+  font-weight: 500;
+}
+
+.gooey-nav-container.transparent-nav nav ul li.active {
+  color: rgb(255, 255, 255);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(139, 92, 246, 0.6);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Styles pour navbar transparente (page Home) - texte noir */
+.gooey-nav-container.transparent-nav-home nav ul {
+  color: rgb(17, 24, 39);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.gooey-nav-container.transparent-nav-home nav ul li {
+  color: rgb(17, 24, 39);
+  font-weight: 500;
+}
+
+.gooey-nav-container.transparent-nav-home nav ul li.active {
+  color: rgb(99, 102, 241);
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Styles pour navbar noire (page About) */
+.gooey-nav-container.dark-nav nav ul {
+  color: rgb(255, 255, 255);
   text-shadow: none;
+  font-weight: 500;
+}
+
+.gooey-nav-container.dark-nav nav ul li {
+  color: rgb(255, 255, 255);
+  font-weight: 500;
+}
+
+.gooey-nav-container.dark-nav nav ul li.active {
+  color: rgb(167, 139, 250);
+  text-shadow: 0 0 15px rgba(167, 139, 250, 0.6);
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .gooey-nav-container nav ul li.active::after {
   font-size: 110;
   opacity: 1;
-  transform: scale(1);
+  transform: translateZ(0) scale(1); /* GPU acceleration */
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12));
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.25), inset 0 0 10px rgba(139, 92, 246, 0.15);
+  animation: activeGlow 2s ease-in-out infinite;
+  will-change: box-shadow, transform;
+}
+
+.gooey-nav-container.dark-nav nav ul li.active::after {
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.15), rgba(139, 92, 246, 0.15));
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.3), inset 0 0 12px rgba(139, 92, 246, 0.2);
+}
+
+@keyframes activeGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), inset 0 0 15px rgba(139, 92, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.5), inset 0 0 20px rgba(139, 92, 246, 0.3);
+  }
 }
 
 .gooey-nav-container .effect {
@@ -124,21 +213,36 @@
 
 .gooey-nav-container .effect.text {
   color: white;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, opacity 0.3s ease;
   font-weight: 500;
   font-size: inherit;
   white-space: nowrap;
   pointer-events: none;
+  opacity: 0;
+  display: none; /* Masquer complètement le texte dupliqué pour un design propre */
+  visibility: hidden;
 }
 
 .gooey-nav-container .effect.text.active {
-  color: black;
+  color: rgb(99, 102, 241);
+  opacity: 1;
+  text-shadow: 0 0 12px rgba(99, 102, 241, 0.5);
+  font-weight: 700;
+}
+
+.gooey-nav-container.dark-nav .effect.text.active {
+  color: rgb(167, 139, 250);
+  text-shadow: 0 0 15px rgba(167, 139, 250, 0.7);
+  font-weight: 700;
 }
 
 .gooey-nav-container .effect.filter {
-  filter: blur(7px) contrast(100) blur(0);
-  mix-blend-mode: lighten;
+  filter: blur(6px);
+  mix-blend-mode: normal;
   overflow: visible;
+  will-change: transform, filter;
+  transform: translateZ(0);
+  opacity: 0.8;
 }
 
 .gooey-nav-container .effect.filter::before {
@@ -160,11 +264,12 @@
   content: '';
   position: absolute;
   inset: 0;
-  background:transparent;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
   transform: scale(0);
   opacity: 0;
   z-index: -1;
   border-radius: 100vw;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
 }
 
 .gooey-nav-container .effect.active::after {
@@ -182,79 +287,97 @@
 .point {
   display: block;
   opacity: 0;
-  width: 20px;
-  height: 20px;
+  width: 12px;
+  height: 12px;
   border-radius: 100%;
   transform-origin: center;
 }
 
 .particle {
-  --time: 5s;
+  --time: 3s;
   position: absolute;
-  top: calc(50% - 8px);
-  left: calc(50% - 8px);
-  animation: particle calc(var(--time)) ease 1 -350ms;
+  top: calc(50% - 6px);
+  left: calc(50% - 6px);
+  animation: particle calc(var(--time)) cubic-bezier(0.4, 0, 0.2, 1) 1 forwards;
   z-index: 10;
+  filter: blur(2px);
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 .point {
   background: var(--color);
   opacity: 1;
-  animation: point calc(var(--time)) ease 1 -350ms;
+  animation: point calc(var(--time)) cubic-bezier(0.4, 0, 0.2, 1) 1 forwards;
+  box-shadow: 0 0 8px var(--color), 0 0 12px var(--color);
+  will-change: transform, opacity;
+  transform: translateZ(0);
 }
 
 @keyframes particle {
   0% {
-    transform: rotate(0deg) translate(calc(var(--start-x)), calc(var(--start-y)));
-    opacity: 1;
-    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+    transform: translate3d(0, 0, 0) scale(0.5);
+    opacity: 0;
   }
 
-  70% {
-    transform: rotate(calc(var(--rotate) * 0.5)) translate(calc(var(--end-x) * 1.2), calc(var(--end-y) * 1.2));
-    opacity: 1;
-    animation-timing-function: ease;
+  10% {
+    opacity: 0.8;
+  }
+
+  30% {
+    transform: translate3d(calc(var(--end-x) * 0.3), calc(var(--end-y) * 0.3), 0) scale(1);
+    opacity: 0.7;
+  }
+
+  60% {
+    transform: translate3d(calc(var(--end-x) * 0.6), calc(var(--end-y) * 0.6), 0) scale(0.8);
+    opacity: 0.5;
   }
 
   85% {
-    transform: rotate(calc(var(--rotate) * 0.66)) translate(calc(var(--end-x)), calc(var(--end-y)));
-    opacity: 1;
+    transform: translate3d(calc(var(--end-x) * 0.9), calc(var(--end-y) * 0.9), 0) scale(0.4);
+    opacity: 0.2;
   }
 
   100% {
-    transform: rotate(calc(var(--rotate) * 1.2)) translate(calc(var(--end-x) * 0.5), calc(var(--end-y) * 0.5));
-    opacity: 1;
+    transform: translate3d(calc(var(--end-x)), calc(var(--end-y)), 0) scale(0.1);
+    opacity: 0;
   }
 }
 
 @keyframes point {
   0% {
-    transform: scale(0);
+    transform: scale3d(0.3, 0.3, 1);
     opacity: 0;
-    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
   }
 
-  25% {
-    transform: scale(calc(var(--scale) * 0.25));
+  15% {
+    transform: scale3d(calc(var(--scale) * 0.5), calc(var(--scale) * 0.5), 1);
+    opacity: 0.6;
   }
 
-  38% {
-    opacity: 1;
+  35% {
+    transform: scale3d(calc(var(--scale) * 0.8), calc(var(--scale) * 0.8), 1);
+    opacity: 0.8;
   }
 
-  65% {
-    transform: scale(var(--scale));
-    opacity: 1;
-    animation-timing-function: ease;
+  55% {
+    transform: scale3d(calc(var(--scale) * 0.7), calc(var(--scale) * 0.7), 1);
+    opacity: 0.6;
   }
 
-  85% {
-    transform: scale(var(--scale));
-    opacity: 1;
+  75% {
+    transform: scale3d(calc(var(--scale) * 0.4), calc(var(--scale) * 0.4), 1);
+    opacity: 0.3;
+  }
+
+  90% {
+    transform: scale3d(calc(var(--scale) * 0.2), calc(var(--scale) * 0.2), 1);
+    opacity: 0.1;
   }
 
   100% {
-    transform: scale(0);
+    transform: scale3d(0, 0, 1);
     opacity: 0;
   }
 }

@@ -4,9 +4,9 @@ import Footer from "../components/ui/Footer";
 
 const Home = () => {
   return (
-    <main className="bg-white dark:bg-[#0f172a] transition-colors duration-300">
-
-      <section className="py-24">
+    <main className="transition-colors duration-300">
+      {/* HeroSection commence dès le haut pour que la navbar soit transparente sur la vidéo */}
+      <section className="pt-0">
         <HeroSection />
       </section>
 

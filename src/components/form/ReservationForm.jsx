@@ -2,33 +2,150 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { motion as Motion } from "framer-motion";
 import './input-group.css';
-import './GlitchText.css';  // Assurez-vous d'importer le CSS de l'effet glitch
+import './GlitchText.css';
 
 export default function ReservationForm() {
+  // États pour la gestion du formulaire
+  const [formData, setFormData] = useState({
+    nom: '',
+    prenom: '',
+    num_tele: '',
+    cin: '',
+    email: '',
+    transport: ''
+  });
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  // Validation: Email
+  const validateEmail = (value) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(value);
+  };
+
+  // Validation: Nom/Prenom (lettres, espaces, tirets uniquement)
+  const validateName = (value) => {
+    const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s\-']+$/;
+    return regex.test(value) && value.trim().length > 0;
+  };
+
+  // Validation: Téléphone marocain (10 chiffres: 06, 07, 05)
+  const validatePhone = (value) => {
+    const cleaned = value.replace(/\D/g, ''); // Enlever tout sauf chiffres
+    return cleaned.length === 10 && /^0[5-7]/.test(cleaned); // 10 chiffres, commence par 05, 06 ou 07
+  };
+
+  // Validation: CIN marocain (lettres + chiffres, pas de caractères spéciaux)
+  const validateCIN = (value) => {
+    const regex = /^[A-Z0-9]+$/; // Lettres majuscules et chiffres uniquement
+    return regex.test(value) && value.length >= 6 && value.length <= 12;
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    let newValue = type === 'checkbox' ? checked : value;
+    let error = '';
+
+    if (name === 'nom' || name === 'prenom') {
+      // Bloquer les caractères spéciaux
+      if (value && !validateName(value)) {
+        error = 'Pas de caractères spéciaux autorisés';
+        return; // Ne pas mettre à jour si invalide
+      }
+    }
+
+    if (name === 'num_tele') {
+      // Garder seulement les chiffres
+      const digits = value.replace(/\D/g, '');
+      newValue = digits.slice(0, 10); // Max 10 chiffres
+      
+      if (digits.length > 0 && !/^0[5-7]?/.test(digits)) {
+        error = 'Le numéro doit commencer par 05, 06 ou 07';
+      }
+    }
+
+    if (name === 'cin') {
+      // Convertir en majuscules et bloquer caractères spéciaux
+      newValue = value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12);
+    }
+
+    if (name === 'email') {
+      newValue = value.toLowerCase().trim();
+    }
+
+    setFormData(prev => ({ ...prev, [name]: newValue }));
+    setErrors(prev => ({ ...prev, [name]: error }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
+    // Validation du formulaire
+    const newErrors = {};
+    if (!formData.nom || !validateName(formData.nom)) {
+      newErrors.nom = 'Nom invalide';
+    }
+    if (!formData.prenom || !validateName(formData.prenom)) {
+      newErrors.prenom = 'Prénom invalide';
+    }
+    if (!validatePhone(formData.num_tele)) {
+      newErrors.num_tele = 'Numéro invalide (10 chiffres: 06... or 07...)';
+    }
+    if (!validateCIN(formData.cin)) {
+      newErrors.cin = 'CIN invalide';
+    }
+    if (!formData.email.trim()) newErrors.email = 'L\'email est requis';
+    if (!formData.transport) newErrors.transport = 'Veuillez indiquer votre choix';
+    if (!formData.email || !validateEmail(formData.email)) {
+      newErrors.email = 'Email invalide';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setLoading(false);
+      return;
+    }
 
     try {
-      const form = e.target;
+      // Vérifier si le CIN existe déjà
+      const { data: existingReservations, error: checkError } = await supabase
+        .from("Rayan")
+        .select('cin')
+        .eq('cin', formData.cin.trim())
+        .limit(1);
 
-      const data = {
-        nom: form.nom.value,
-        prenom: form.prenom.value,
-        num_tele: form.num_tele.value,
-        cin: form.cin.value,
-      };
+      if (checkError) {
+        console.error('Erreur vérification:', checkError);
+      }
 
-      const { error } = await supabase.from("Rayan").insert([data]);
+      if (existingReservations && existingReservations.length > 0) {
+        alert('⚠️ Cette carte nationale (CIN) a déjà été utilisée pour une réservation.');
+        setErrors({ cin: 'CIN déjà enregistré' });
+        setLoading(false);
+        return;
+      }
+
+      // Insérer directement la réservation dans la base de données
+      const { error } = await supabase.from("Rayan").insert([{
+        nom: formData.nom.trim(),
+        prenom: formData.prenom.trim(),
+        num_tele: formData.num_tele,
+        cin: formData.cin.trim(),
+        email: formData.email.trim(),
+        transport: formData.transport === 'oui' ? true : (formData.transport === 'non' ? false : null)
+      }]);
+      
       if (error) throw error;
 
-      alert("Réservation envoyée ✅");
-      form.reset();
+      alert("✅ Réservation confirmée avec succès!");
+      
+      // Reset du formulaire
+      setFormData({ nom: '', prenom: '', num_tele: '', cin: '', email: '', transport: '' });
+      setErrors({});
     } catch (err) {
-      console.error("SUPABASE ERROR:", err);
-      alert("Erreur lors de l'envoi ❌");
+      console.error("ERREUR SUPABASE:", err);
+      alert("❌ Erreur lors de la réservation. Veuillez réessayer.");
     } finally {
       setLoading(false);
     }
@@ -88,19 +205,86 @@ export default function ReservationForm() {
           }}
           className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 mb-16"
         >
-          <AnimatedInput label="Nom" name="nom" />
-          <AnimatedInput label="Prénom" name="prenom" />
-          <AnimatedInput label="Téléphone" name="num_tele" />
-          <AnimatedInput label="Carte nationale (CIN)" name="cin" />
+          <AnimatedInput 
+            label="Nom" 
+            name="nom" 
+            value={formData.nom}
+            onChange={handleChange}
+            error={errors.nom}
+          />
+          <AnimatedInput 
+            label="Prénom" 
+            name="prenom" 
+            value={formData.prenom}
+            onChange={handleChange}
+            error={errors.prenom}
+          />
+          <AnimatedInput 
+            label="Téléphone" 
+            name="num_tele" 
+            value={formData.num_tele}
+            onChange={handleChange}
+            error={errors.num_tele}
+            maxLength={10}
+          />
+          <AnimatedInput 
+            label="Carte nationale (CIN)" 
+            name="cin" 
+            value={formData.cin}
+            onChange={handleChange}
+            error={errors.cin}
+          />
+          <AnimatedInput 
+            label="Email" 
+            name="email" 
+            value={formData.email}
+            onChange={handleChange}
+            error={errors.email}
+            type="email"
+          />
+          <div className="md:col-span-2 flex flex-col md:flex-row md:items-center gap-1 p-2 bg-gray-50/50 rounded-lg border border-gray-200/50 -mt-4">
+            <label className="text-sm font-semibold text-gray-700 whitespace-nowrap">
+              Vous voulez transport ?
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="transport"
+                  value="oui"
+                  checked={formData.transport === 'oui'}
+                  onChange={handleChange}
+                  className="w-4 h-4 text-blue-600"
+                />
+                <span className="text-gray-700">Oui, je me transporte</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="transport"
+                  value="non"
+                  checked={formData.transport === 'non'}
+                  onChange={handleChange}
+                  className="w-4 h-4 text-blue-600"
+                />
+                <span className="text-gray-700">Non, je ne veux pas transport</span>
+              </label>
+            </div>
+          </div>
         </Motion.div>
 
         {/* Nouveau bouton stylisé */}
         <div className="flex justify-end gap-6">
-          <button className="button" type="submit" disabled={loading}>
-            {loading ? "Envoi..." : "Let`s go →"} {/* Texte dynamique du bouton */}
+          <button 
+            className="button" 
+            type="submit" 
+            disabled={loading}
+          >
+            {loading ? "Envoi..." : "Let's go →"}
           </button>
         </div>
       </form>
+
       </div>
     </Motion.div>
   );
@@ -109,7 +293,7 @@ export default function ReservationForm() {
 /* =========================
    INPUT AVEC DESIGN UIVERSE
 ========================= */
-function AnimatedInput({ label, name }) {
+function AnimatedInput({ label, name, value, onChange, error, maxLength, type = "text" }) {
   return (
     <Motion.div
       variants={{
@@ -120,12 +304,20 @@ function AnimatedInput({ label, name }) {
     >
       <div className="inputGroup">
         <input
-          type="text"
+          type={type}
           name={name}
+          value={value}
+          onChange={onChange}
           required
           placeholder=" "
+          maxLength={maxLength}
         />
         <label>{label}</label>
+        {error && (
+          <span className="absolute -bottom-5 left-0 text-xs text-red-500">
+            {error}
+          </span>
+        )}
       </div>
     </Motion.div>
   );

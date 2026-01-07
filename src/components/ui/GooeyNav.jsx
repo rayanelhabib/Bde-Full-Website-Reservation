@@ -8,11 +8,11 @@ const noise = (n = 1) => n / 2 - Math.random() * n;
 const GooeyNav = ({
   items,
   animationTime = 600,
-  particleCount = 15,
-  particleDistances = [90, 10],
-  particleR = 100,
-  timeVariance = 300,
-  colors = [1, 2, 3, 1, 2, 3, 1, 4],
+  particleCount = 10,
+  particleDistances = [100, 20],
+  particleR = 80,
+  timeVariance = 200,
+  colors = [1, 2, 3, 4, 1, 2],
   initialActiveIndex = 0
 }) => {
   const containerRef = useRef(null);
@@ -30,19 +30,33 @@ const GooeyNav = ({
   }, [location.pathname, items, initialActiveIndex]);
   
   const [activeIndex, setActiveIndex] = useState(calculatedActiveIndex);
+  
+  // Navbar transparente sur toutes les pages
+  const isReservationPage = location.pathname === '/reservation';
+  const isHomePage = location.pathname === '/';
+  
+  // Sur Home et Reservation, utiliser texte blanc (fond sombre)
+  const needsWhiteText = isHomePage || isReservationPage;
 
-  const getXY = useCallback((distance, pointIndex, totalPoints) => {
-    const angle = ((360 + noise(8)) / totalPoints) * pointIndex * (Math.PI / 180);
-    return [distance * Math.cos(angle), distance * Math.sin(angle)];
+  // Animation optimisée : particules seulement vers le haut
+  const getXY = useCallback((distance) => {
+    // Angle limité au quadrant supérieur (0° à 180°) pour que les bulles montent
+    const baseAngle = 90; // Commence en haut (90°)
+    const angleRange = 90; // De -45° à +45° autour du haut
+    const angle = (baseAngle + (noise(angleRange) - angleRange/2)) * (Math.PI / 180);
+    return [distance * Math.cos(angle), -Math.abs(distance * Math.sin(angle))]; // Toujours vers le haut (y négatif)
   }, []);
 
   const createParticle = useCallback((i, t, d, r) => {
     let rotate = noise(r / 10);
+    // Position de départ au centre, fin vers le haut - smooth et subtil
+    const startDist = d[0] * 0.1; // Très proche du centre
+    const endDist = d[1] * 1.2; // Distance modérée
     return {
-      start: getXY(d[0], particleCount - i, particleCount),
-      end: getXY(d[1] + noise(7), particleCount - i, particleCount),
+      start: getXY(startDist),
+      end: getXY(endDist),
       time: t,
-      scale: 1 + noise(0.2),
+      scale: 0.6 + noise(0.2), // Taille subtile
       color: colors[Math.floor(Math.random() * colors.length)],
       rotate: rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10
     };
@@ -127,7 +141,14 @@ const GooeyNav = ({
       textRef.current.classList.remove('active');
 
       void textRef.current.offsetWidth;
+      // Afficher le texte dupliqué uniquement pendant l'animation
       textRef.current.classList.add('active');
+      // Masquer après l'animation
+      setTimeout(() => {
+        if (textRef.current) {
+          textRef.current.classList.remove('active');
+        }
+      }, animationTime);
     }
 
     if (filterRef.current) {
@@ -159,7 +180,11 @@ const GooeyNav = ({
     const activeLi = navRef.current.querySelectorAll('li')[activeIndex];
     if (activeLi) {
       updateEffectPosition(activeLi);
-      textRef.current?.classList.add('active');
+      // Ne pas afficher le texte dupliqué de manière permanente
+      // Il sera visible uniquement pendant les animations de clic
+      if (textRef.current) {
+        textRef.current.classList.remove('active');
+      }
     }
 
     const resizeObserver = new ResizeObserver(() => {
@@ -174,7 +199,10 @@ const GooeyNav = ({
   }, [activeIndex]);
 
   return (
-    <div className="gooey-nav-container" ref={containerRef}>
+    <div className={`gooey-nav-container ${
+      needsWhiteText ? 'transparent-nav' 
+      : 'transparent-nav-home'
+    }`} ref={containerRef}>
       <nav>
         <ul ref={navRef}>
           {items.map((item, index) => (

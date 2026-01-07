@@ -1,0 +1,25 @@
+/* Force transparency for navbar on all pages */
+header.navbar-transparent,
+header.fixed.navbar-transparent,
+header[class*="navbar-transparent"] {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.navbar-transparent-nav,
+nav.navbar-transparent-nav,
+nav[class*="navbar-transparent"] {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Override any Tailwind bg-white or bg-gray classes */
+header.navbar-transparent.bg-white,
+nav.navbar-transparent-nav.bg-white,
+header.navbar-transparent[class*="bg-white"],
+nav.navbar-transparent-nav[class*="bg-white"] {
+  background-color: transparent !important;
+  background: transparent !important;
+}

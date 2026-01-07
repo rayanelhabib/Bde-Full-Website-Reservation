@@ -1,69 +1,50 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 
-const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, fadeOut = 0.6, ease = 'power3.out' }) => {
+// Liste dynamique des noms d'images et personnes
+const imageData = [
+  { name: 'aamir', person: 'Aamir' },
+  { name: 'rayan', person: 'Rayan' },
+  { name: 'adnane', person: 'Adnane' },
+  { name: 'aymen', person: 'Aymen' },
+  { name: 'ahmed', person: 'Ahmed' },
+  { name: 'boutaina', person: 'Boutaina' },
+  { name: 'hafsa', person: 'Hafsa' },
+  { name: 'adam', person: 'adam' },
+  { name: 'hiba', person: 'Hiba' },
+  { name: 'kenza', person: 'Kenza' },
+  { name: 'lina', person: 'Lina' },
+  
+  { name: 'salma', person: 'Salma' },
+  { name: 'wadii', person: 'Wadii' }
+];
+
+// Générer dynamiquement le tableau demo
+const demo = imageData.map((item, index) => {
+  const colors = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899', '#14B8A6', '#F97316', '#A855F7', '#3B82F6'];
+  const borderColor = colors[index % colors.length];
+  const urls = ['https://github.com/', 'https://linkedin.com/in/', 'https://dribbble.com/', 'https://kaggle.com/', 'https://aws.amazon.com/'];
+  const url = urls[index % urls.length];
+  
+  return {
+    image: `/${item.name}.jpg`,
+    title: item.person,
+    subtitle: 'Membre BDE',
+    handle: `@${item.name.toLowerCase()}`,
+    borderColor: borderColor,
+    gradient: `linear-gradient(145deg,${borderColor},#000)`,
+    url: url
+  };
+});
+
+
+
+const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, ease = 'power3.out' }) => {
   const rootRef = useRef(null);
-  const fadeRef = useRef(null);
   const setX = useRef(null);
   const setY = useRef(null);
   const pos = useRef({ x: 0, y: 0 });
 
-  const demo = [
-    {
-      image: 'https://i.pravatar.cc/300?img=8',
-      title: 'Alex Rivera',
-      subtitle: 'Full Stack Developer',
-      handle: '@alexrivera',
-      borderColor: '#4F46E5',
-      gradient: 'linear-gradient(145deg,#4F46E5,#000)',
-      url: 'https://github.com/'
-    },
-    {
-      image: 'https://i.pravatar.cc/300?img=11',
-      title: 'Jordan Chen',
-      subtitle: 'DevOps Engineer',
-      handle: '@jordanchen',
-      borderColor: '#10B981',
-      gradient: 'linear-gradient(210deg,#10B981,#000)',
-      url: 'https://linkedin.com/in/'
-    },
-    {
-      image: 'https://i.pravatar.cc/300?img=3',
-      title: 'Morgan Blake',
-      subtitle: 'UI/UX Designer',
-      handle: '@morganblake',
-      borderColor: '#F59E0B',
-      gradient: 'linear-gradient(165deg,#F59E0B,#000)',
-      url: 'https://dribbble.com/'
-    },
-    {
-      image: 'https://i.pravatar.cc/300?img=16',
-      title: 'Casey Park',
-      subtitle: 'Data Scientist',
-      handle: '@caseypark',
-      borderColor: '#EF4444',
-      gradient: 'linear-gradient(195deg,#EF4444,#000)',
-      url: 'https://kaggle.com/'
-    },
-    {
-      image: 'https://i.pravatar.cc/300?img=25',
-      title: 'Sam Kim',
-      subtitle: 'Mobile Developer',
-      handle: '@thesamkim',
-      borderColor: '#8B5CF6',
-      gradient: 'linear-gradient(225deg,#8B5CF6,#000)',
-      url: 'https://github.com/'
-    },
-    {
-      image: 'https://i.pravatar.cc/300?img=60',
-      title: 'Tyler Rodriguez',
-      subtitle: 'Cloud Architect',
-      handle: '@tylerrod',
-      borderColor: '#06B6D4',
-      gradient: 'linear-gradient(135deg,#06B6D4,#000)',
-      url: 'https://aws.amazon.com/'
-    }
-  ];
 
   const data = items?.length ? items : demo;
 
@@ -95,15 +76,10 @@ const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, fadeO
   const handleMove = e => {
     const r = rootRef.current.getBoundingClientRect();
     moveTo(e.clientX - r.left, e.clientY - r.top);
-    gsap.to(fadeRef.current, { opacity: 0, duration: 0.25, overwrite: true });
   };
 
   const handleLeave = () => {
-    gsap.to(fadeRef.current, {
-      opacity: 1,
-      duration: fadeOut,
-      overwrite: true
-    });
+    // Animation de fade au survol - désactivée pour l'instant
   };
 
   const handleCardClick = url => {
@@ -122,7 +98,7 @@ const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, fadeO
       ref={rootRef}
       onPointerMove={handleMove}
       onPointerLeave={handleLeave}
-      className={`relative w-full h-full flex flex-wrap justify-center items-center gap-3 ${className}`}
+      className={`relative w-full min-h-[420px] flex flex-wrap justify-center items-center gap-3 ${className}`}
       style={{
         '--r': `${radius}px`,
         '--x': '50%',
@@ -148,8 +124,27 @@ const ChromaGrid = ({ items, className = '', radius = 300, damping = 0.45, fadeO
                 'radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%)'
             }}
           />
-          <div className="relative z-10 flex-1 p-[10px] box-border">
-            <img src={c.image} alt={c.title} loading="lazy" className="w-full h-full object-cover rounded-[10px]" />
+          <div className="relative z-10 flex-1 p-[10px] box-border h-[220px]">
+            <img
+              src={c.image}
+              alt={c.title}
+              loading="lazy"
+              className="w-full h-full object-cover rounded-[10px]"
+              onError={(e) => {
+                console.error(`Failed to load image: ${c.image}`);
+                e.target.style.display = 'none'; // Hide the image
+                // Show a fallback image or message
+                e.target.parentElement.innerHTML = `
+                  <div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:#f0f0f0;color:#666;font-family:sans-serif;">
+                    <img src="/bde_balck_pic.jpg" alt="Fallback Image" style="max-width:80%; max-height:80%;" />
+                  </div>
+                `;
+              }}
+              onLoad={(e) => {
+                console.log(`Successfully loaded image: ${c.image}`);
+                e.target.style.display = 'block'; // Make sure the image is visible
+              }}
+            />
           </div>
           <footer className="relative z-10 p-3 text-white font-sans grid grid-cols-[1fr_auto] gap-x-3 gap-y-1">
             <h3 className="m-0 text-[1.05rem] font-semibold">{c.title}</h3>

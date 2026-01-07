@@ -198,3 +198,46 @@ input:focus {
     @apply bg-background text-foreground;
   }
 }
+@keyframes typing {  
+from { width: 0; }  
+to { width: 100%; }  
+}  
+  
+@keyframes blink {  
+  50%% { border-color: transparent; }  
+}  
+  
+.typing-animation {  
+  overflow: hidden;  
+  border-right: 2px solid;  
+  white-space: nowrap;  
+  animation: typing 2s steps(10, end), blink 1s step-end infinite;  
+} 
+/* Enhanced typing animation with deleting effect */  
+@keyframes typing-delete {  
+  0%, 10% { width: 0; opacity: 1; }  
+  40%, 60% { width: 100%; opacity: 1; }  
+  70% { opacity: 0; }  
+  71% { width: 100%; opacity: 0; }  
+  72%, 100% { width: 0; opacity: 0; }  
+}  
+  
+.typing-delete-animation {  
+  overflow: hidden;  
+  border-right: 2px solid;  
+  white-space: nowrap;  
+  animation: typing-delete 4s infinite linear;  
+} 
+/* Smooth typing animation for centered text */  
+@keyframes smooth-typing {  
+  0% { opacity: 0; transform: translateY(10px); }  
+  10% { opacity: 1; transform: translateY(0); }  
+  20%, 80% { opacity: 1; }  
+  90% { opacity: 0; transform: translateY(-10px); }  
+  100% { opacity: 0; }  
+}  
+  
+.smooth-typing-animation {  
+  display: inline-block;  
+  animation: smooth-typing 4s infinite ease-in-out;  
+} 

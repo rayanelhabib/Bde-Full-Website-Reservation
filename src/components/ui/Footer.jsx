@@ -1,5 +1,5 @@
 import "./footer-social.css";
-import schoolLogo from "@/assets/alkendi-school.png";
+import schoolLogo from "/bde_balck_pic.jpg";
 
 const Footer = () => {
   return (
@@ -42,7 +42,7 @@ const Footer = () => {
             <div className="card">
               {/* Instagram */}
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/bde_alkendi/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="social-link1"
