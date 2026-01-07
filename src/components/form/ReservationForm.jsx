@@ -138,7 +138,13 @@ export default function ReservationForm() {
       
       if (error) throw error;
 
-      alert("✅ Réservation confirmée avec succès!");
+      // Enhanced confirmation message with Instagram instructions and developer tag
+      const confirmationMessage = `✅ Réservation confirmée avec succès!
+
+Pour plus d'informations, veuillez contacter BDE sur Instagram.
+
+OR contact direct : @skz_rayan23 for any issue`;
+      alert(confirmationMessage);
       
       // Reset du formulaire
       setFormData({ nom: '', prenom: '', num_tele: '', cin: '', email: '', transport: '' });
