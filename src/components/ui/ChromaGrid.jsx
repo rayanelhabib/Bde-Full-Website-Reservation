@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 // Liste dynamique des noms d'images et personnes
 const imageData = [
   { name: 'aamir', person: 'Aamir' },
-  { name: 'rayan', person: 'Rayan' },
+  { name: 'rayan', person: 'skz_rayan23' },
   { name: 'adnane', person: 'Adnane' },
   { name: 'aymen', person: 'Aymen' },
   { name: 'ahmed', person: 'Ahmed' },
@@ -23,8 +23,6 @@ const imageData = [
 const demo = imageData.map((item, index) => {
   const colors = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899', '#14B8A6', '#F97316', '#A855F7', '#3B82F6'];
   const borderColor = colors[index % colors.length];
-  const urls = ['https://github.com/', 'https://linkedin.com/in/', 'https://dribbble.com/', 'https://kaggle.com/', 'https://aws.amazon.com/'];
-  const url = urls[index % urls.length];
   
   return {
     image: `/${item.name}.jpg`,
@@ -33,7 +31,7 @@ const demo = imageData.map((item, index) => {
     handle: `@${item.name.toLowerCase()}`,
     borderColor: borderColor,
     gradient: `linear-gradient(145deg,${borderColor},#000)`,
-    url: url
+    url: 'https://www.instagram.com/bde_alkendi/'  // Lien vers Instagram pour tous les membres
   };
 });
 
