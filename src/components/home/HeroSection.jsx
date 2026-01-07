@@ -1,36 +1,18 @@
-import { useRef, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import FlowerLoader from "@/components/ui/FlowerLoader";
 import ReserveButton from "@/components/ui/ReserveButton";
 import SocialHolographic from "@/components/ui/SocialHolographic";
 import TextType from "@/components/ui/TextType";
+import ProgressiveBackground from "@/components/ui/ProgressiveBackground";
 
 // Vidéo de fond
 import videoGala from "@/assets/video_gala.mp4";
 
 const HeroSection = () => {
-  const videoRef = useRef(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
-  // Forcer la lecture continue de la vidéo
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const forcePlay = () => {
-      video.play().catch(() => {});
-    };
-
-    video.addEventListener("ended", forcePlay);
-    video.addEventListener("pause", forcePlay);
-
-    return () => {
-      video.removeEventListener("ended", forcePlay);
-      video.removeEventListener("pause", forcePlay);
-    };
-  }, []);
 
   // Click Réserver → loader → redirection
   const handleReserveClick = () => {
@@ -44,22 +26,13 @@ const HeroSection = () => {
   return (
     <section className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
 
-      {/* BACKGROUND VIDEO */}
-      <div className="absolute inset-0">
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover object-center"
-        >
-          <source src={videoGala} type="video/mp4" />
-          Votre navigateur ne supporte pas la vidéo.
-        </video>
-
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+      {/* PROGRESSIVE BACKGROUND WITH LOW-RES PLACEHOLDER */}
+      <ProgressiveBackground
+        videoSrc={videoGala}
+        lowQualitySrc={`data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyMCIgaGVpZ2h0PSI5MDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDE5MiA5MCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQgbWVldCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iIzU1NCIvPjwvc3ZnPg==`} // Simple SVG placeholder
+        className="w-full h-full object-cover object-center"
+        overlayClass="absolute inset-0 bg-black/40"
+      />
 
       {/* CONTENT */}
       <div className="relative z-20 max-w-4xl mx-auto px-6 text-center text-white">
