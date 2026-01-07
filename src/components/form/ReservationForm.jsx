@@ -146,6 +146,10 @@ Pour plus d'informations, veuillez contacter BDE sur Instagram.
 OR contact direct : @skz_rayan23 for any issue`;
       alert(confirmationMessage);
       
+      // TODO: In a production environment, you would trigger an email here
+      // This would typically involve calling a Supabase Edge Function
+      // that handles email sending securely
+      
       // Reset du formulaire
       setFormData({ nom: '', prenom: '', num_tele: '', cin: '', email: '', transport: '' });
       setErrors({});
