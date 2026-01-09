@@ -13,29 +13,28 @@ const ProgressiveBackground = ({
 
   // Handle video loading
   useEffect(() => {
-    if (videoSrc && !isHighResLoaded) {
+    if (videoSrc) {
+      // Preload video with higher priority for immediate display
       const video = document.createElement('video');
-      video.preload = 'metadata'; // Only load metadata, not full video
+      video.preload = 'auto'; // Preload the full video immediately
       video.src = videoSrc;
 
       const handleCanPlay = () => {
-        // Video metadata loaded, consider low-res ready
         setIsLowResLoaded(true);
-        
-        // Load the actual video element after a short delay
-        setTimeout(() => {
-          setIsHighResLoaded(true);
-        }, 500); // Small delay to allow initial render
+        setIsHighResLoaded(true); // Show video immediately when ready
       };
 
-      video.addEventListener('loadedmetadata', handleCanPlay);
+      // Try multiple events to ensure quick loading
+      video.addEventListener('canplay', handleCanPlay);
+      video.addEventListener('loadeddata', handleCanPlay);
       
       return () => {
-        video.removeEventListener('loadedmetadata', handleCanPlay);
+        video.removeEventListener('canplay', handleCanPlay);
+        video.removeEventListener('loadeddata', handleCanPlay);
         video.remove(); // Clean up
       };
     }
-  }, [videoSrc, isHighResLoaded]);
+  }, [videoSrc]);
 
   // Handle image loading
   useEffect(() => {
@@ -88,8 +87,9 @@ const ProgressiveBackground = ({
               loop
               muted
               playsInline
+              preload="auto"
               className={`w-full h-full object-cover object-center ${isHighResLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-1000`}
-              style={{ transitionDelay: isLowResLoaded ? '0ms' : '500ms' }}
+              style={{ transitionDelay: '0ms' }}
             >
               <source src={videoSrc} type="video/mp4" />
               Votre navigateur ne supporte pas la vidéo.
